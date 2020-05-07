@@ -5,10 +5,14 @@ import { /* OptionsContext, */ FormContext } from '../Form';
 
 const StyledTextarea = styled.textarea`
   ${inputStyles}
-  resize: ${props => props.resize}
+  resize: ${props => props.resize};
 `;
 
-export const Textarea = ({ name, value: userValue, resize = 'vertical' }) => {
+export const Textarea = ({
+  name,
+  value: userValue = '',
+  resize = 'vertical'
+}) => {
   const { formState, updateFormState } = useContext(FormContext);
 
   useEffect(() => {
@@ -19,7 +23,7 @@ export const Textarea = ({ name, value: userValue, resize = 'vertical' }) => {
   return (
     <StyledTextarea
       name={name}
-      value={formState[name]}
+      value={formState[name] || ''}
       onChange={updateFormState}
       resize={resize}
     />

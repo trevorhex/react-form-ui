@@ -3,18 +3,12 @@ import { Input, Textarea } from '../components';
 import { StyledField } from './StyledField';
 import { OptionsContext } from '../Form';
 
-const FormField = ({
-  input = 'input',
-  name = '',
-  value = '',
-  type,
-  resize
-}) => {
+const FormField = ({ input = 'input', ...rest }) => {
   switch (input) {
     case 'input':
-      return <Input type={type} name={name} value={value} />;
+      return <Input {...rest} />;
     case 'textarea':
-      return <Textarea name={name} value={value} resize={resize} />;
+      return <Textarea {...rest} />;
     default:
       return null;
   }
@@ -23,7 +17,7 @@ const FormField = ({
 export const Field = ({
   className,
   style: userStyles = {},
-  width = '',
+  width = 'full',
   ...rest
 }) => {
   const { media } = useContext(OptionsContext);

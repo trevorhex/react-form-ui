@@ -1,8 +1,9 @@
-import React, { createContext, useState, useEffect, useMemo } from 'react';
+import React, { createContext } from 'react';
 import styled from 'styled-components';
 import { Field } from '../components';
 import { FloatClear } from '../StyledElements';
-import { setObjState, getCssMediaObject, SCREEN_SIZES } from '../../helpers';
+import { useFormState } from '../../hooks';
+import { getCssMediaObject, SCREEN_SIZES } from '../../helpers';
 
 export const FormContext = createContext();
 export const OptionsContext = createContext();
@@ -18,51 +19,30 @@ const StyledForm = styled.form`
   }
 `;
 
-const INIT_STATE = {
-  media: getCssMediaObject(SCREEN_SIZES),
-  labelStyle: 'above'
-};
-
 const Form = ({
   className,
   style: userStyles = {},
   onSubmit,
-  labelStyle = 'above',
-  media = {},
+  options: userOptions = { media: SCREEN_SIZES },
   children
 }) => {
-  const [optionsState, setOptionsState] = useState(INIT_STATE);
-  const [formState, setFormState] = useState({});
-  const memoizedMedia = useMemo(() => media, []);
-
-  useEffect(() => {
-    setObjState(setOptionsState, {
-      media: getCssMediaObject(media),
-      labelStyle
-    });
-  }, [memoizedMedia, labelStyle]);
-
-  const handleSubmit = e => {
-    e.preventDefault();
-    onSubmit && onSubmit(formState);
-  };
-
-  const handleInputChange = e => {
-    const { name, value } = e.target;
-    setObjState(setFormState, { [name]: value });
-  };
-
-  const memoizedFormState = useMemo(
-    () => ({ formState, updateFormState: handleInputChange }),
-    [formState]
+  const { formState, updateFormState, handleFormSubmit } = useFormState(
+    onSubmit
   );
+  const { media, ...restUserOptions } = userOptions;
+  const options = {
+    labelStyle: 'above',
+    media: getCssMediaObject(media),
+    ...restUserOptions
+  };
+
   return (
-    <OptionsContext.Provider value={optionsState}>
-      <FormContext.Provider value={memoizedFormState}>
+    <OptionsContext.Provider value={options}>
+      <FormContext.Provider value={{ formState, updateFormState }}>
         <StyledForm
           className={className}
           style={userStyles}
-          onSubmit={handleSubmit}
+          onSubmit={handleFormSubmit}
         >
           {children}
         </StyledForm>

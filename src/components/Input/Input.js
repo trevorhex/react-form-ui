@@ -3,16 +3,19 @@ import styled from 'styled-components';
 import { inputStyles } from '../../styles';
 import { /* OptionsContext, */ FormContext } from '../Form';
 
+export const uncontrolledFields = ['submit', 'reset', 'button', 'file'];
+
 const StyledInput = styled.input`
   ${inputStyles}
 `;
 
-export const Input = ({ name, value: userValue, type = 'text' }) => {
+export const Input = ({ name, value: userValue = '', type = 'text' }) => {
   // const { labelStyle } = useContext(OptionsContext);
   const { formState, updateFormState } = useContext(FormContext);
+  const controlled = !uncontrolledFields.includes(type);
 
   useEffect(() => {
-    if (userValue !== '')
+    if (controlled && userValue !== '')
       updateFormState({ target: { name, value: userValue } });
   }, []);
 
@@ -20,8 +23,8 @@ export const Input = ({ name, value: userValue, type = 'text' }) => {
     <StyledInput
       type={type}
       name={name}
-      value={formState[name]}
-      onChange={updateFormState}
+      value={controlled ? formState[name] || '' : userValue}
+      onChange={controlled ? updateFormState : null}
     />
   );
 };

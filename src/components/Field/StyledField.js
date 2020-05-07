@@ -5,10 +5,12 @@ export const StyledField = styled.div`
   width: 100%;
   padding: 0 7px 14px;
 
-  &:first-child {
+  &:first-child,
+  &.full {
     padding-left: 0;
   }
-  &:last-child {
+  &:last-child,
+  &.full {
     padding-right: 0;
   }
 
