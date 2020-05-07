@@ -23,17 +23,17 @@ const Form = ({
   className,
   style: userStyles = {},
   onSubmit,
-  options: userOptions = { media: SCREEN_SIZES },
+  options: userOptions = {},
   children
 }) => {
   const { formState, updateFormState, handleFormSubmit } = useFormState(
     onSubmit
   );
-  const { media, ...restUserOptions } = userOptions;
+
   const options = {
     labelStyle: 'above',
-    media: getCssMediaObject(media),
-    ...restUserOptions
+    ...userOptions,
+    media: getCssMediaObject(userOptions.media || SCREEN_SIZES)
   };
 
   return (

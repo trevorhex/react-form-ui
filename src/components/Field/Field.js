@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { Input, Textarea } from '../components';
 import { StyledField } from './StyledField';
 import { OptionsContext } from '../Form';
+import { getCombinedOptions } from '../../helpers';
 
 const FormField = ({ input = 'input', ...rest }) => {
   switch (input) {
@@ -17,10 +18,13 @@ const FormField = ({ input = 'input', ...rest }) => {
 export const Field = ({
   className,
   style: userStyles = {},
+  options: userOptions = {},
   width = 'full',
   ...rest
 }) => {
-  const { media } = useContext(OptionsContext);
+  const { ...globalOptions } = useContext(OptionsContext);
+  const options = getCombinedOptions(globalOptions, userOptions);
+  const { media } = options;
 
   return (
     <StyledField
@@ -28,7 +32,7 @@ export const Field = ({
       style={userStyles}
       media={media}
     >
-      <FormField {...rest} />
+      <FormField options={options} {...rest} />
     </StyledField>
   );
 };
